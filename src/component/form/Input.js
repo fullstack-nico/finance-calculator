@@ -8,7 +8,7 @@ import {
     Text
 } from "react-native";
 
-import theme from '../../_config/global/style/theme.style'
+import {theme} from '../../_config/global'
 
 
 // Input

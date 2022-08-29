@@ -4,15 +4,15 @@ import{
 } from 'react-native';
 
 import {Text} from '../../../component/typography';
-import ImageComponent from '../../../component/media/image';
-import theme from '../../../_config/global/style/theme.style';
+import {ImageComponent} from '../../../component';
+import {theme} from '../../../_config/global';
 import {Form, FormButton, FormInput, FormSubmitErrorMsg} from '../../forms';
 import {Button} from '../../../component/form';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import * as yup from 'yup';
 
-export default function register(){
+export default function Register(){
 
     // navigation
     const navigation = useNavigation();

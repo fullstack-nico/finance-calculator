@@ -7,7 +7,7 @@ import {
     StyleSheet,
 } from 'react-native';
 
-import theme from '../../../_config/global/style/theme.style'
+import {theme} from '../../../_config/global'
 
 import { useSelector, useDispatch } from 'react-redux'
 import {loggedIn} from '../authSlice';
@@ -15,7 +15,7 @@ import {loggedIn} from '../authSlice';
 import * as yup from 'yup';
 import {Form, FormButton, FormInput, FormSubmitErrorMsg} from '../../forms';
 import {loginError} from '../authSlice'
-import ImageComponent from '../../../component/media/image';
+import {ImageComponent} from '../../../component';
 import {Button} from '../../../component';
 import { useNavigation } from '@react-navigation/native';
 

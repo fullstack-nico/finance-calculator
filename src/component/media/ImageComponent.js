@@ -3,9 +3,9 @@ import React, {Component} from 'react';
 import {Image as Images} from 'react-native';
 
 //  base styles  و٩(๑˃̵ᴗ˂̵)و
-import theme from '../../_config/global/style/theme.style';
+import {theme} from '../../_config/global';
 
-class ImageComponent extends Component {
+export class ImageComponent extends Component {
     render() {
         return (
             <Images
@@ -17,4 +17,4 @@ class ImageComponent extends Component {
     }
 }
 
-export default ImageComponent;
+

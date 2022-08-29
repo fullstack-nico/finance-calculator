@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, Pressable } from 'react-native';
 import {Text} from '../typography';
-import theme from '../../_config/global/style/theme.style';
+import {theme} from '../../_config/global';
 
 export function Button({unstyled= false, title,onPress,color, style, rounded=false}) {
     if(unstyled === true){

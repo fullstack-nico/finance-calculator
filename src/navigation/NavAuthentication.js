@@ -3,8 +3,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 // screens
-import Login from '../modules/authentication/screen/login'
-import Register from '../modules/authentication/screen/register'
+import Login from '../modules/authentication/screen/Login'
+import Register from '../modules/authentication/screen/Register'
 
 const Stack = createNativeStackNavigator();
 export default function NavAuthentication(){
