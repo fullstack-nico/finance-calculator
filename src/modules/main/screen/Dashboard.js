@@ -24,14 +24,14 @@ export default function Dashboard(){
     const { height, width } = useWindowDimensions();
     return(
         <Container>
-            <Box style={{ borderWidth: 0.5, padding: 10}}>
-                <Box  style={{ alignSelf: 'center', flexDirection: 'row'}}>
-                    <Text>Dashboard</Text>
-                    <ChevronDownIcon style={{marginLeft: 5, alignSelf: 'center'}} />
-                </Box>
-            </Box>
+            {/*<Box style={{ borderWidth: 0.5, padding: 10}}>*/}
+            {/*    <Box  style={{ alignSelf: 'center', flexDirection: 'row'}}>*/}
+            {/*        <Text>Dashboard</Text>*/}
+            {/*        <ChevronDownIcon style={{marginLeft: 5, alignSelf: 'center'}} />*/}
+            {/*    </Box>*/}
+            {/*</Box>*/}
 
-            <Box flexDirection='row' justifyContent='space-between' marginTop='5'>
+            <Box flexDirection='row' justifyContent='space-between' marginTop='2'>
                 <Text>Daily Spending</Text>
                 <Text>RM 10.00</Text>
             </Box>
