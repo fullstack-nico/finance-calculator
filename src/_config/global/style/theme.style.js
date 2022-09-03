@@ -1,5 +1,6 @@
 export const theme = {
     //Font
+    FONT_SIZE_EXTRA_SMALL: 10,
     FONT_SIZE_SMALL: 12,
     FONT_SIZE_MEDIUM: 14,
     FONT_SIZE_LARGE: 16,
@@ -7,6 +8,8 @@ export const theme = {
     FONT_WEIGHT_LIGHT: 200,
     FONT_WEIGHT_MEDIUM: 600,
     FONT_WEIGHT_HEAVY: 800,
+
+    FONT_COLOR_MAIN: 'black',
 
     //Border
     BORDER_RADIUS_SMALL: 5,
@@ -23,7 +26,7 @@ export const theme = {
     MARGIN_MEDIUM: 10,
     MARGIN_LARGE: 15,
 
-    PRIMARY_COLOR: 'red',
+    PRIMARY_COLOR: '#F4EA56',
     SECONDARY_COLOR: 'rgb(238, 167, 2)',
 
     // media
