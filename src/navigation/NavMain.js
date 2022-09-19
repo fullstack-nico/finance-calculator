@@ -26,8 +26,8 @@ function HomeTabs(){
     return(
         <Tab.Navigator
             screenOptions={{headerShown: false}}
-            initialRouteName="history">
-            <Tab.Screen name="main" component={Dashboard} />
+            initialRouteName="dashboard">
+            <Tab.Screen name="dashboard" component={Dashboard} />
             <Tab.Screen name="history" component={History} />
         </Tab.Navigator>
     )

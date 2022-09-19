@@ -45,9 +45,10 @@ const styles = StyleSheet.create({
     },
     text:{
       marginBottom: 5,
+      fontSize: theme.FONT_SIZE_MEDIUM
     },
     input:{
-        height: 50,
+        height: 40,
         alignItems:"center",
         flexDirection: "row",
         padding:5,

@@ -31,10 +31,11 @@ export function Button({unstyled= false, title,onPress,color, style, rounded=fal
 }
 export const styles = StyleSheet.create({
     button:{
-        backgroundColor: theme.PRIMARY_COLOR,
+        backgroundColor: theme.PRIMARY_COLOR_ONE,
         justifyContent: 'center',
         alignItems: 'center',
         padding: theme.PADDING_MEDIUM,
+        margin: theme.MARGIN_SMALL,
         /*width: '100%',*/
         borderRadius: theme.BORDER_RADIUS_SMALL
     },

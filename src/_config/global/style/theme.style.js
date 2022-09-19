@@ -1,4 +1,8 @@
 export const theme = {
+    // main theme
+    //https://www.color-hex.com/color-palette/36318
+
+
     //Font
     FONT_SIZE_EXTRA_SMALL: 10,
     FONT_SIZE_SMALL: 12,
@@ -26,8 +30,10 @@ export const theme = {
     MARGIN_MEDIUM: 10,
     MARGIN_LARGE: 15,
 
-    PRIMARY_COLOR: '#F4EA56',
-    SECONDARY_COLOR: 'rgb(238, 167, 2)',
+    PRIMARY_COLOR_ONE: '#91a8d0',
+    PRIMARY_COLOR_TWO: '#b4c8ea',
+    PRIMARY_COLOR_THREE: '#f7cac9',
+    PRIMARY_COLOR_FOUR: '#ffdcdb',
 
     // media
     IMAGE: {

@@ -1,14 +1,26 @@
-import React from 'react';
-import {StyleSheet, useWindowDimensions } from 'react-native';
+import React, { useState } from 'react';
+import {StyleSheet, useWindowDimensions, View, ScrollView } from 'react-native';
 import {Text} from '../../../component/typography';
-import {Container} from '../component';
+import {Container, Fab} from '../component';
 import {
     Box,
     ChevronDownIcon,
     Divider,
+    Icon,
+    AddIcon,
+    HamburgerIcon,
 } from 'native-base';
 import {theme} from '../../../_config/global';
-import { VictoryLine, VictoryChart, VictoryTheme, VictoryAxis, VictoryTooltip, VictoryLabel, VictoryVoronoiContainer} from "victory-native";
+
+import {
+    VictoryLine,
+    VictoryChart,
+    VictoryTheme,
+    VictoryAxis,
+    VictoryTooltip,
+    VictoryLabel,
+    VictoryVoronoiContainer
+} from "victory-native";
 
 const data = [
     { datetime: 'mon', amount: 120.51, label: "120.51" },
@@ -21,8 +33,12 @@ const data = [
 ];
 
 export default function Dashboard(){
+
     const { height, width } = useWindowDimensions();
+
+
     return(
+        <ScrollView>
         <Container>
             {/*<Box style={{ borderWidth: 0.5, padding: 10}}>*/}
             {/*    <Box  style={{ alignSelf: 'center', flexDirection: 'row'}}>*/}
@@ -35,17 +51,17 @@ export default function Dashboard(){
                 <Text>Daily Spending</Text>
                 <Text>RM 10.00</Text>
             </Box>
-            <Divider marginTop={2}/>
+            <Divider marginTop={2} backgroundColor={theme.PRIMARY_COLOR_TWO}/>
             <Box flexDirection='row' justifyContent='space-between' marginTop='2'>
                 <Text>Weekly Spending</Text>
                 <Text>RM 110.00</Text>
             </Box>
-            <Divider marginTop={2}/>
+            <Divider marginTop={2} backgroundColor={theme.PRIMARY_COLOR_TWO}/>
             <Box flexDirection='row' justifyContent='space-between' marginTop='2'>
                 <Text>Monthly Budget</Text>
                 <Text>RM 110.00 / 500.00</Text>
             </Box>
-            <Divider marginTop={2}/>
+            <Divider marginTop={2} backgroundColor={theme.PRIMARY_COLOR_TWO}/>
 
             <Text style={{marginTop: 25, alignSelf: 'center', }}>Expenses Graph</Text>
 
@@ -54,17 +70,18 @@ export default function Dashboard(){
                     <Text style={{alignSelf: 'center'}}>11 Feb</Text>
                 </Box>
 
-                <Divider orientation="vertical"/>
+                <Divider orientation="vertical" backgroundColor={theme.PRIMARY_COLOR_TWO}/>
                 <Box style={{flex:1}}>
                     <Text style={{alignSelf: 'center'}}>Week 2</Text>
                 </Box>
-                <Divider orientation="vertical"/>
+                <Divider orientation="vertical" backgroundColor={theme.PRIMARY_COLOR_TWO}/>
                 <Box style={{flex:1}}>
                     <Text style={{alignSelf: 'center'}}>Day 7 - 13</Text>
                 </Box>
             </Box>
 
             <Text style={{marginBottom: -30, marginLeft: 5, fontSize: theme.FONT_SIZE_SMALL}}>Expense (RM)</Text>
+
             <VictoryChart
                 padding={{ top: 40, bottom: 80, left: 40, right: 20 }}
                 domainPadding={{x:32, y:30}}
@@ -79,13 +96,11 @@ export default function Dashboard(){
                 <VictoryLine
 
                     style={{
-                        data: { stroke: "#87ceeb" },
+                        data: { stroke: theme.PRIMARY_COLOR_ONE },
                     }}
                     data={data}
                     x={"datetime"}
                     y={"amount"}
-
-
                 />
 
                 <VictoryAxis
@@ -104,8 +119,11 @@ export default function Dashboard(){
                 />
             </VictoryChart>
 
+        <Fab />
 
+        {/*<View style={{height: 100}} />*/}
         </Container>
+        </ScrollView>
     )
 }
 

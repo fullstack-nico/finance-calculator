@@ -32,8 +32,8 @@ export default function Register(){
             .oneOf([yup.ref('password'), null], 'Passwords must match')
     });
 
-    const handleSubmit = () => {
-        alert("uwu")
+    const handleSubmit = (item) => {
+        console.log(item)
     }
 
     return(
