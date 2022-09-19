@@ -7,10 +7,12 @@ import {
 } from './authAction';
 
 const initialState = {
+    initialState_isLoading: true,
     username: "h4fiz1998@gmail.com",
     password: 123321,
     loginError: "abcdefg login error",
     loggedIn: false,
+
 }
 
 export const authSlice = createSlice({
@@ -23,24 +25,25 @@ export const authSlice = createSlice({
         /*password: (state,action) =>{state.password = action.payload}*/
         password: (state,action) => {state.password = validation_password(state,action)},
         loginError: (state,action) => {state.loginError = action.payload},
-        loggedIn: (state,action) => {state.loggedIn = action.payload}
+        loggedIn: (state,action) => {
+            state.loggedIn = action.payload,
+            state.initialState_isLoading = false
+        }
     },
     extraReducers: (builder) => {
         builder
             .addCase(login.pending, (state, action) => {
                 console.log("builder pending")
-                // state.errorUsername = action.payload.errorUsername
             })
             .addCase(login.fulfilled, (state, action) => {
                 console.log("builder succesful", action.payload)
+                state.loggedIn = action.payload
 
-                // state.errorUsername = action.payload.errorUsername
             })
             .addCase(login.rejected, (state, action) => {
                 // wont run if builder is fulfilled
                 console.log("builder REJECTED : ", action.payload)
                 alert(action.payload)
-                // state.errorUsername = action.payload.errorUsername
             })
             .addCase(loginTest.fulfilled, (state, action) => {
                 console.log("builder for login test succesful")

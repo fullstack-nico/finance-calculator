@@ -1,7 +1,9 @@
 import { createAsyncThunk} from '@reduxjs/toolkit'
-import {KEY_MASTER_APP, URL_LOGIN} from '../../_config/global/constants';
-import {serverPost} from '../../_config/global/functions';
+import {KEY_MASTER_APP, URL_LOGIN, USER_TOKEN, USER_TOKEN_DESC} from '../../_config/global/constants';
+import {serverPost, saveData, loadData} from '../../_config/global/functions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {loggedIn} from './authSlice';
+
 
 export const loginTest = createAsyncThunk(
     'auth/login',  (payload) => {
@@ -22,35 +24,32 @@ export const login = createAsyncThunk(
         };
 
 //	What to do with the received data
-        const processDataFromServer = (responseData) => {
-            if(responseData.type === 'validation_parameter'){
-                if(responseData.message?.password) return rejectWithValue(responseData.message.password)
-                if(responseData.message?.email) return rejectWithValue(responseData.message.email)
-                return rejectWithValue(JSON.stringify(responseData))
+        const processDataFromServer = (response) => {
+            if(response.type === 'validation_parameter'){
+                if(response.message?.password) return rejectWithValue(response.message.password)
+                if(response.message?.email) return rejectWithValue(response.message.email)
+                return rejectWithValue(JSON.stringify(response))
             }
-            else if (responseData.status.status === 'success') {
-                console.log("SUCCESS")
-                dispatch(loggedIn(true))
+            else if (response.status.status === 'success') {
+                return saveData(USER_TOKEN, response.data.uuid, USER_TOKEN_DESC).then((result) => {
+                    if(result) return true;
+                    else return rejectWithValue(JSON.stringify(response))
+                })
             }
-            else{
-                console.log("no response")
-            }
-
+            return rejectWithValue(JSON.stringify(response))
         };
 
         // 	If there is error, what to do
         const errorFunction = (error) => {
             console.log('error function')
-            // alert(error);
-            // return rejectWithValue('aaaa');
             return rejectWithValue("err")
-
         };
 
-        const response = await serverPost(URL, req, processDataFromServer, errorFunction, rejectWithValue)
-        return response
-
+        const serverResponse = await serverPost(URL, req, processDataFromServer, errorFunction, rejectWithValue)
+        return serverResponse
 });
+
+
 
 
 
@@ -84,15 +83,15 @@ export const incrementAsync = createAsyncThunk(
 //         };
 //
 // //	What to do with the received data
-//         const processDataFromServer = (responseData) => {
+//         const processDataFromServer = (response) => {
 //             // console.log("V  Login V");
-//             // console.log(responseData);
-//             if(responseData.type === 'validation_parameter'){
-//                 if(responseData.message?.password) return rejectWithValue(responseData.message.password)
-//                 if(responseData.message?.email) return rejectWithValue(responseData.message.email)
-//                 return rejectWithValue(JSON.stringify(responseData))
+//             // console.log(response);
+//             if(response.type === 'validation_parameter'){
+//                 if(response.message?.password) return rejectWithValue(response.message.password)
+//                 if(response.message?.email) return rejectWithValue(response.message.email)
+//                 return rejectWithValue(JSON.stringify(response))
 //             }
-//             else if (responseData.status.status === 'success') {
+//             else if (response.status.status === 'success') {
 //                 console.log("SUCCESS")
 //             }
 //             else{
@@ -127,8 +126,8 @@ export const incrementAsync = createAsyncThunk(
 //         //     //         body: JSON.stringify(req)
 //         //     //     })
 //         //     //     .then((response) => response.json())
-//         //     //     .then((responseData) => {
-//         //     //        return  processDataFromServer(responseData);
+//         //     //     .then((response) => {
+//         //     //        return  processDataFromServer(response);
 //         //     //     })
 //         //     //     .catch((error) => {
 //         //     //         console.log(error);

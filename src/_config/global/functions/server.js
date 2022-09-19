@@ -11,8 +11,6 @@ export const serverPost = async (url, req, processDataFromServer, errorFunction,
 		})
 		.then((response) => response.json())
 		.then((responseData) => {
-
-
 			if (responseData.status.status === 'fail'){
 				return rejectWithValue(responseData.status.message)
 			}
