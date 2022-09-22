@@ -7,10 +7,10 @@ import {Text} from '../../../component/typography';
 import {ImageComponent} from '../../../component';
 import {theme} from '../../../_config/global';
 import {Form, FormButton, FormInput, FormSubmitErrorMsg} from '../../forms';
-import {Button} from '../../../component/form';
 import {useNavigation} from '@react-navigation/native';
-import {useSelector} from 'react-redux';
 import * as yup from 'yup';
+import {register} from '../authAction';
+import { useSelector, useDispatch } from 'react-redux'
 
 export default function Register(){
 
@@ -18,12 +18,15 @@ export default function Register(){
     const navigation = useNavigation();
 
     // Redux hooks
-    const id = useSelector((state) => state.formLogin.username)
+    const id = useSelector((state) => state.formLogin.email)
     const pass = useSelector((state) => state.formLogin.password)
     const loginError = useSelector((state) => state.formLogin.loginError)
 
+    const dispatch = useDispatch()
+
     let validationSchema = yup.object().shape({
-        username: yup.string()
+        email: yup.string()
+            .email()
             .required(),
         password: yup.string()
             .required('Password is required'),
@@ -33,10 +36,10 @@ export default function Register(){
     });
 
     const handleSubmit = (item) => {
-        console.log(item)
+        dispatch(register(item))
     }
 
-    return(
+    return (
         <View style={{flex:1,  justifyContent: 'center'}}>
             <ImageComponent
                 style={theme.IMAGE_LOGIN}
@@ -48,13 +51,13 @@ export default function Register(){
 
             <View style={{margin: theme.MARGIN_SMALL}}>
                 <Form
-                    initialValues={{username: '', password: '', confirmPassword: ''}}
+                    initialValues={{email: 'awa@gmail.com', password: '123321', confirmPassword: '123321'}}
                     onSubmit={handleSubmit}
-                    validationSchema={validationSchema} >
+                    validationSchema={validationSchema}>
                     <FormSubmitErrorMsg error={"Invalid Credential"} visible={loginError}/>
                     <FormInput
-                        name="username"
-                        placeholder={"Username"}
+                        name="email"
+                        placeholder={"Email"}
                         autoCapitalized="none"
                         autoCorrect={false}
                         rounded={true} />

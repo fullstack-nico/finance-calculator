@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, createAction} from '@reduxjs/toolkit'
 import * as yup from 'yup';
+import {loginTest} from '../../modules/authentication/authAction';
 
 const initialState = {
     username: null,
@@ -41,6 +42,7 @@ export const formValidation = createSlice({
             .addCase(incrementAsync.fulfilled, (state, action) => {
                 state.errorUsername = action.payload.errorUsername
             })
+
     },
 })
 

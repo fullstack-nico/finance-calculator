@@ -32,62 +32,20 @@ function Login() {
     const navigation = useNavigation();
 
     // Redux hooks
-    /*const id = useSelector((state) => state.formLogin.username)
+    /*const id = useSelector((state) => state.formLogin.email)
     const pass = useSelector((state) => state.formLogin.password)*/
     const loginError = useSelector((state) => state.formLogin.loginError)
     const stateAuth = useSelector((state) => state.auth)
     const dispatch = useDispatch()
 
     let validationSchema = yup.object().shape({
-        username: yup.string().email().required(),
-        password: yup.number().required().positive().integer().typeError('password must be a number type'),
+        email: yup.string().email().required(),
+        password: yup.string().required(),
     });
-    const handleSubmitch = (item) => {
+
+    const handleLogin = (item) => {
         console.log('login button is pressed')
         dispatch(login(item))
-    }
-
-    const handleSubmitch2 = (item) => {
-
-        console.log("handlesubmit")
-        console.log(item)
-
-        // URL of server request controller
-        const URL = URL_LOGIN;
-
-        var req = {
-            keyMasterApp: KEY_MASTER_APP,
-            email: item.username,
-            password: item.password,
-        };
-
-//	What to do with the received data
-        const processDataFromServer = (responseData) => {
-            console.log("V  Login V");
-            console.log(responseData);
-
-            if(responseData.type === 'validation_parameter'){
-                alert(JSON.stringify(responseData));
-            }
-            else if (responseData.status.status === 'fail'){
-                console.log(responseData)
-            }
-            else if (responseData.status.status === 'success') {
-                console.log(responseData)
-            }
-            else{
-                console.log("no response")
-            }
-
-        };
-
-        // 	If there is error, what to do
-        const errorFunction = (error) => {
-            alert(error);
-
-        };
-
-        serverPost(URL, req, processDataFromServer, errorFunction);
     }
 
     return (
@@ -100,20 +58,20 @@ function Login() {
 
             <View style={{margin: theme.MARGIN_SMALL}}>
                 <Form
-                    initialValues={{username: stateAuth.username, password: stateAuth.password}}
-                    onSubmit={handleSubmitch}
+                    initialValues={{email: stateAuth.email, password: stateAuth.password}}
+                    onSubmit={handleLogin}
                     validationSchema={validationSchema}
                 >
                     <FormSubmitErrorMsg error={"Invalid Credential"} visible={loginError}/>
                     <FormInput
-                        value={stateAuth.username}
-                        name="username"
-                        placeholder={"Username"}
+                        // initialValue={stateAuth.email}
+                        name="email"
+                        placeholder={"Email"}
                         autoCapitalized="none"
                         autoCorrect={false}
                         rounded={true} />
                     <FormInput
-                        value={stateAuth.password.toString()}
+                        // initialValue={stateAuth.password.toString()}
                         name="password"
                         placeholder={"Password"}
                         secureTextEntry

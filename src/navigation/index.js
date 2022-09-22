@@ -21,7 +21,6 @@ export default function navigator(){
            if(result.success) dispatch(funcLoggedIn(result))
            else dispatch(funcLoggedIn(null))
        })
-
     }, [stateAuth.initialState_isLoading]);
 
 

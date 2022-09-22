@@ -4,15 +4,19 @@ import { createSlice, createAsyncThunk, createAction} from '@reduxjs/toolkit'
 import {
     loginTest,
     login,
+    register,
+    logout,
 } from './authAction';
 
 const initialState = {
     initialState_isLoading: true,
-    username: "h4fiz1998@gmail.com",
-    password: 123321,
+    email: "",
+    password: "",
     loginError: "abcdefg login error",
     loggedIn: false,
 
+    logout_loading: false,
+    logout_message: "Logging out"
 }
 
 export const authSlice = createSlice({
@@ -20,7 +24,7 @@ export const authSlice = createSlice({
     initialState,
     reducers:{
         // Form Validation
-        username: (state,action) => {state.username = validation_username(state, action)},
+        email: (state,action) => {state.email = validation_email(state, action)},
         errorUsername: (state,action) => {state.errorUsername = action.payload},
         /*password: (state,action) =>{state.password = action.payload}*/
         password: (state,action) => {state.password = validation_password(state,action)},
@@ -32,27 +36,54 @@ export const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            // LOGIN
             .addCase(login.pending, (state, action) => {
-                console.log("builder pending")
+                console.log("builder " + action.payload + " pending")
             })
             .addCase(login.fulfilled, (state, action) => {
                 console.log("builder succesful", action.payload)
                 state.loggedIn = action.payload
-
             })
             .addCase(login.rejected, (state, action) => {
                 // wont run if builder is fulfilled
                 console.log("builder REJECTED : ", action.payload)
                 alert(action.payload)
             })
-            .addCase(loginTest.fulfilled, (state, action) => {
-                console.log("builder for login test succesful")
-                // state.errorUsername = action.payload.errorUsername
+            // REGISTER
+            .addCase(register.pending, (state, action) => {
+                console.log("builder " + action.payload + " pending")
+            })
+            .addCase(register.fulfilled, (state, action) => {
+                console.log("builder succesful", action.payload)
+                state.loggedIn = action.payload
+            })
+            .addCase(register.rejected, (state, action) => {
+                // wont run if builder is fulfilled
+                console.log("builder REJECTED : ", action.payload)
+                alert(action.payload)
+            })
+            // logout
+            .addCase(logout.pending, (state, action) => {
+                state.logout_loading = true,
+                state.initialState_isLoading = true
+            })
+            .addCase(logout.fulfilled, (state, action) => {
+                console.log("builder succesful", action.payload)
+                state.loggedIn = false,
+                state.logout_loading = false,
+                state.initialState_isLoading = false
+            })
+            .addCase(logout.rejected, (state, action) => {
+                // wont run if builder is fulfilled
+                console.log("builder REJECTED : ", action.payload)
+                alert(action.payload)
+                state.logout_loading = false,
+                state.initialState_isLoading = false
             })
     },
 })
 
-const validation_username = async (text) => {
+const validation_email= async (text) => {
 
     /*schema.validate({age: text})
         .catch(function (err) {
@@ -76,7 +107,7 @@ const validation_password = (text) => {
 
 // Action creators are generated for each case reducer function
 export const {
-    username,
+    email,
     password,
     loginError,
     loggedIn,

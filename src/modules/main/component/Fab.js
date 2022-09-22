@@ -3,25 +3,23 @@ import {Pressable, StyleSheet, View, useWindowDimensions} from 'react-native';
 import {
     Actionsheet,
     AddIcon,
-    Box,
     Fab as FabNativeBase,
     HamburgerIcon,
     MinusIcon,
     Modal,
-    FormControl,
-    Button,
-    Input,
     Menu,
-    Select, ChevronDownIcon,
+    ChevronDownIcon,
 } from 'native-base';
-import { useFormikContext } from 'formik';
-
 import {Text} from '../../../component';
 import {Form, FormInput, FormButton, FormInputErrorMsg} from '../../forms';
+
 import {theme} from '../../../_config/global';
-import Divider from 'native-base/src/components/composites/Divider/index';
-import {loggedIn} from '../../authentication/authSlice';
 import * as yup from 'yup';
+
+import {useDispatch} from 'react-redux'
+import {logout} from '../../authentication/authAction';
+
+
 
 export function Fab(){
     // const [fab, setFab] = useState(false);
@@ -30,7 +28,7 @@ export function Fab(){
     const [category, setCategory] = useState('Select Category')
     const [categoryError, setCategoryError] = useState(false)
     const { height, width } = useWindowDimensions();
-
+    const dispatch = useDispatch()
 
     const handleSubmit = (item) => {
         if(category === 'Select Category') setCategoryError(true)
@@ -132,6 +130,19 @@ export function Fab(){
                         }}>
                         Add Expenses
                     </Actionsheet.Item>
+                    <Actionsheet.Item
+                        onPress={()=>{
+                             dispatch(logout())
+                        }}
+                        startIcon={<MinusIcon style={{alignSelf: 'center'}}/>}
+                        style={{
+
+                            borderBottomWidth: 1,
+                            borderColor: theme.PRIMARY_COLOR_ONE
+                        }}>
+                        Log out
+                    </Actionsheet.Item>
+
 
                 </Actionsheet.Content>
             </Actionsheet>

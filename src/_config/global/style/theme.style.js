@@ -44,6 +44,6 @@ export const theme = {
         height: 200,
         width: 200,
         alignSelf: 'center',
-        marginTop: -120,
+        marginBottom: 25,
     }
 };

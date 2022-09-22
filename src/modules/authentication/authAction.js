@@ -1,29 +1,38 @@
-import { createAsyncThunk} from '@reduxjs/toolkit'
-import {KEY_MASTER_APP, URL_LOGIN, USER_TOKEN, USER_TOKEN_DESC} from '../../_config/global/constants';
-import {serverPost, saveData, loadData} from '../../_config/global/functions';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {loggedIn} from './authSlice';
+import {createAsyncThunk} from '@reduxjs/toolkit';
+import {
+    KEY_MASTER_APP,
+    URL_LOGIN,
+    URL_REGISTER,
+    USER_TOKEN,
+    USER_TOKEN_DESC
+} from '../../_config/global/constants';
+import {saveData, removeDataAll,  serverPost} from '../../_config/global/functions';
 
 
-export const loginTest = createAsyncThunk(
-    'auth/login',  (payload) => {
-        console.log("login thunked")
-        return payload
+export const logout = createAsyncThunk(
+    'auth/logout',  async(payload, { rejectWithValue, dispatch}) => {
+        removeDataAll().then((result)=>{
+            if(result.success) {
+                alert('Log out succesful');
+                return true;
+            }
+            return rejectWithValue(result.value)
+        })
     }
-);
+)
 
 export const login = createAsyncThunk(
-    'auth/logintest',  async(payload, { rejectWithValue, dispatch}) => {
+    'auth/login',  async(payload, { rejectWithValue, dispatch}) => {
 
         const URL = URL_LOGIN;
 
         var req = {
             keyMasterApp: KEY_MASTER_APP,
-            email: payload.username,
+            email: payload.email,
             password: payload.password,
         };
 
-//	What to do with the received data
+        //	What to do with the received data
         const processDataFromServer = (response) => {
             if(response.type === 'validation_parameter'){
                 if(response.message?.password) return rejectWithValue(response.message.password)
@@ -31,9 +40,10 @@ export const login = createAsyncThunk(
                 return rejectWithValue(JSON.stringify(response))
             }
             else if (response.status.status === 'success') {
+                // If token is saved succesfully, return true (set loggedIn = true)
                 return saveData(USER_TOKEN, response.data.uuid, USER_TOKEN_DESC).then((result) => {
-                    if(result) return true;
-                    else return rejectWithValue(JSON.stringify(response))
+                    if(result.success) return true;
+                    else return rejectWithValue(JSON.stringify(response.value))
                 })
             }
             return rejectWithValue(JSON.stringify(response))
@@ -42,11 +52,42 @@ export const login = createAsyncThunk(
         // 	If there is error, what to do
         const errorFunction = (error) => {
             console.log('error function')
-            return rejectWithValue("err")
+            return rejectWithValue(error)
         };
 
-        const serverResponse = await serverPost(URL, req, processDataFromServer, errorFunction, rejectWithValue)
-        return serverResponse
+        return await serverPost(URL, req, processDataFromServer, errorFunction, rejectWithValue);
+});
+
+
+export const register = createAsyncThunk(
+    'auth/register',  async(payload, { rejectWithValue, dispatch}) => {
+
+        const URL = URL_REGISTER;
+
+        var req = {
+            keyMasterApp: KEY_MASTER_APP,
+            email: payload.email,
+            password: payload.password,
+        };
+
+        //	What to do with the received data
+        const processDataFromServer = (response) => {
+            if(response.type === 'validation_parameter') return rejectWithValue(JSON.stringify(response))
+            else if (response.status.status === 'success') {
+                return saveData(USER_TOKEN, response.data.uuid, USER_TOKEN_DESC).then((result) => {
+                    if(result) return true;
+                    else return rejectWithValue(JSON.stringify(response))
+                })
+            }
+        };
+
+        // 	If there is error, what to do
+        const errorFunction = (error) => {
+            console.log('error function')
+            return rejectWithValue(error)
+        };
+
+        return await serverPost(URL, req, processDataFromServer, errorFunction, rejectWithValue);
 });
 
 
