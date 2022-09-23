@@ -34,6 +34,7 @@ export const theme = {
     PRIMARY_COLOR_TWO: '#b4c8ea',
     PRIMARY_COLOR_THREE: '#f7cac9',
     PRIMARY_COLOR_FOUR: '#ffdcdb',
+    PRIMARY_COLOR_WHITE: '#fefefe',
 
     // media
     IMAGE: {
@@ -45,5 +46,13 @@ export const theme = {
         width: 200,
         alignSelf: 'center',
         marginBottom: 25,
-    }
+    },
+
 };
+
+export const themeComponent = {
+    text:{
+        marginBottom: 5,
+        fontSize: 14,
+    }
+}

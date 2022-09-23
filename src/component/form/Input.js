@@ -39,7 +39,7 @@ export const Input = ({ title, underline, placeholder, value, onChangeText, edit
     );
 }
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
     container:{
         margin: theme.MARGIN_SMALL,
     },

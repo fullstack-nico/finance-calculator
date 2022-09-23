@@ -9,8 +9,15 @@ import {
     Modal,
     Menu,
     ChevronDownIcon,
+
+    Box,
 } from 'native-base';
-import {Text} from '../../../component';
+import {
+    Button,
+    Text,
+    Select
+} from '../../../component';
+
 import {Form, FormInput, FormButton, FormInputErrorMsg} from '../../forms';
 
 import {theme} from '../../../_config/global';
@@ -21,19 +28,31 @@ import {logout} from '../../authentication/authAction';
 
 
 
+
 export function Fab(){
     // const [fab, setFab] = useState(false);
     const [actionSheet, setActionSheet] = useState(false)
     const [showModal, setShowModal] = useState(true);
-    const [category, setCategory] = useState('Select Category')
+    const [category, setCategory] = useState(null)
+    const [subCategory, setSubCategory] = useState(null)
     const [categoryError, setCategoryError] = useState(false)
+    const [subCategoryError, setSubCategoryError] = useState(false)
+    const [mode, setMode] = useState("advanced")
+
     const { height, width } = useWindowDimensions();
     const dispatch = useDispatch()
 
+    const initialRef = React.useRef(null);
+    const finalRef = React.useRef(null);
+
     const handleSubmit = (item) => {
-        if(category === 'Select Category') setCategoryError(true)
+        // if(!category) setCategoryError(true)
+        if(!subCategory) setCategoryError(true)
+
         console.log(item)
         console.log(category)
+        console.log(subCategory)
+        console.log(listSubCategory)
     }
 
     let validationSchema = yup.object().shape({
@@ -42,12 +61,39 @@ export function Fab(){
         amount: yup.number()
             .typeError("Amount must be a number")
             .required('Amount is required'),
-
     });
+
+    let listCategory = [
+        {"key": 1, value: "Food"},
+        {"key": 2, value: "Groceries"},
+        {"key": 3, value: "Shopping"},
+    ]
+
+    let listSubCategory = [
+        {"key": 1, value: "Breakfastt"},
+        {"key": 2, value: "Lunchh"},
+        {"key": 3, value: "Dinnerr"},
+    ]
+
+    function subCategoryInput() {
+        if(mode === "advanced")
+        return(
+            <Select
+                title={"Sub Category"}
+                onValueChange={(itemValue) => setSubCategory(itemValue)}
+                placeholder={"Choose Sub Category"}
+            >
+                {listSubCategory}
+            </Select>
+        )
+    }
+
+
+
 
 
     return(
-        <>
+        <Box>
             <FabNativeBase
                 style = {{ backgroundColor: theme.PRIMARY_COLOR_ONE, marginBottom: 50 }}
                 icon={<HamburgerIcon />}
@@ -55,10 +101,24 @@ export function Fab(){
             </FabNativeBase>
 
 
+
             <Modal isOpen={showModal} onClose={() => setShowModal(false)} closeOnOverlayClick={false}>
                 <Modal.Content style={{ width: width*0.85, }}>
                     <Modal.CloseButton />
-                    <Modal.Header>New Expenses</Modal.Header>
+                    <Text style={{ alignSelf: 'center', marginTop: 15, marginBottom: 10}}>New Expenses</Text>
+
+                    <View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, justifyContent: 'space-between' }}>
+                       <Button
+                           title={"Simple"}
+                           onPress={() => setMode("simple")}
+                           style={{width: '45%'}}
+                       />
+                        <Button
+                            title={"Advanced"}
+                            onPress={() => setMode("advanced")}
+                            style={{width: '45%'}}
+                        />
+                    </View>
 
                     <Modal.Body>
                         <Form
@@ -68,27 +128,49 @@ export function Fab(){
 
                             <FormInput title="Name" name="name"/>
 
-                            <Menu style={{marginTop: 20, width: width*0.73, marginLeft: 5}} trigger={triggerProps => {
-                                return(
-                                    <Pressable {...triggerProps}>
-                                        <View style={styles.container} name="uwu">
-                                            <Text style={styles.text}>Category</Text>
-                                            <View style={styles.input}>
-                                                <Text style={{fontSize: theme.FONT_SIZE_MEDIUM}}>{category}</Text>
-                                                <ChevronDownIcon />
-                                            </View>
-                                            <FormInputErrorMsg error={"please select category"} visible={categoryError}/>
-                                        </View>
+                            <Select
+                                title={"Category"}
+                                onValueChange={(itemValue) => setCategory(itemValue)}
+                                placeholder={"Choose Category"}
+                            >
+                                {listCategory}
+                            </Select>
 
-                                    </Pressable>
-                                )
-                            }}>
-                                <Menu.Item onPress={()=> setCategory("ETC")}>Food</Menu.Item>
-                                <Menu.Item onPress={()=>setCategory("ETC")}>ETC</Menu.Item>
-                            </Menu>
+                            {/*<Select*/}
+                            {/*    title={"Category"}*/}
+                            {/*    onValueChange={(itemValue) => setCategory(itemValue)}*/}
+                            {/*    placeholder={"Choose Category"}*/}
+                            {/*>*/}
+                            {/*    <Select.Item label="Food" value="Food" />*/}
+                            {/*    <Select.Item label="Groceries" value="Groceries" />*/}
+                            {/*    <Select.Item label="Toys" value="Toys" />*/}
+                            {/*</Select>*/}
+
+                            {/*<Menu style={{marginTop: 1, width: width*0.73, marginLeft: 5}} trigger={triggerProps => {*/}
+                            {/*    return(*/}
+                            {/*        <Pressable {...triggerProps}>*/}
+                            {/*            <View style={styles.container}>*/}
+                            {/*                <Text style={styles.text}>Category</Text>*/}
+                            {/*                <View style={styles.input}>*/}
+                            {/*                    <Text style={{fontSize: theme.FONT_SIZE_MEDIUM}}>{category || "Select Category"}</Text>*/}
+                            {/*                    <ChevronDownIcon />*/}
+                            {/*                </View>*/}
+                            {/*                <FormInputErrorMsg error={"please select category"} visible={categoryError}/>*/}
+                            {/*            </View>*/}
+
+                            {/*        </Pressable>*/}
+                            {/*    )*/}
+                            {/*}}>*/}
+                            {/*    <Menu.Item onPress={()=> setCategory("Food")}>Food</Menu.Item>*/}
+                            {/*    <Menu.Item onPress={()=>setCategory("ETC")}>ETC</Menu.Item>*/}
+                            {/*</Menu>*/}
+
+                            {subCategoryInput()}
+
                             <FormInput title="Amount" name="amount" />
 
                             <FormButton
+                                rounded={true}
                                 title={"Confirm"}
                             />
                         </Form>
@@ -146,35 +228,8 @@ export function Fab(){
 
                 </Actionsheet.Content>
             </Actionsheet>
-        </>
+        </Box>
     )
-
-
-    // return(
-    //     <View>
-    //     {
-    //         fab ?
-    //             <View>
-    //                 <FabNativeBase
-    //                     style = {{ backgroundColor: theme.PRIMARY_COLOR_ONE, marginBottom: 50 }}
-    //                     icon={<HamburgerIcon />}
-    //                     onPress = {() =>setFab(!fab)}>
-    //                 </FabNativeBase>
-    //                 <FabNativeBase
-    //                     style = {{ backgroundColor: theme.PRIMARY_COLOR_ONE, marginBottom: 110 }}
-    //                     icon={<AddIcon />}
-    //                     onPress = {() =>setFab(!fab)}>
-    //                 </FabNativeBase>
-    //             </View>
-    //             :
-    //             <FabNativeBase
-    //                 style = {{ backgroundColor: theme.PRIMARY_COLOR_ONE, marginBottom: 50 }}
-    //                 icon={<HamburgerIcon />}
-    //                 onPress = {() =>setFab(!fab)}>
-    //             </FabNativeBase>
-    //     }
-    //     </View>
-    // )
 }
 
 const styles = StyleSheet.create({

@@ -10,8 +10,8 @@ import {
 
 const initialState = {
     initialState_isLoading: true,
-    email: "",
-    password: "",
+    email: "awa@gmail.com",
+    password: "123321",
     loginError: "abcdefg login error",
     loggedIn: false,
 
