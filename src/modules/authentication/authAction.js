@@ -8,7 +8,6 @@ import {
 } from '../../_config/global/constants';
 import {saveData, removeDataAll,  serverPost} from '../../_config/global/functions';
 
-
 export const logout = createAsyncThunk(
     'auth/logout',  async(payload, { rejectWithValue, dispatch}) => {
         removeDataAll().then((result)=>{
@@ -42,7 +41,7 @@ export const login = createAsyncThunk(
             else if (response.status.status === 'success') {
                 // If token is saved succesfully, return true (set loggedIn = true)
                 return saveData(USER_TOKEN, response.data.uuid, USER_TOKEN_DESC).then((result) => {
-                    if(result.success) return true;
+                    if(result.success) return response.data.uuid;
                     else return rejectWithValue(JSON.stringify(response.value))
                 })
             }
@@ -75,7 +74,7 @@ export const register = createAsyncThunk(
             if(response.type === 'validation_parameter') return rejectWithValue(JSON.stringify(response))
             else if (response.status.status === 'success') {
                 return saveData(USER_TOKEN, response.data.uuid, USER_TOKEN_DESC).then((result) => {
-                    if(result) return true;
+                    if(result) return response.data.uuid;
                     else return rejectWithValue(JSON.stringify(response))
                 })
             }

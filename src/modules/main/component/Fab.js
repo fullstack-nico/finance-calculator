@@ -20,39 +20,30 @@ import {
 
 import {Form, FormInput, FormButton, FormInputErrorMsg} from '../../forms';
 
-import {theme} from '../../../_config/global';
+import {ADD_SUB_CATEGORY,ADD_CATEGORY, theme} from '../../../_config/global';
 import * as yup from 'yup';
 
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux';
 import {logout} from '../../authentication/authAction';
-
-
+import {Categories} from './Categories';
+import {expenseMode} from '../../user/userSlice';
 
 
 export function Fab(){
     // const [fab, setFab] = useState(false);
     const [actionSheet, setActionSheet] = useState(false)
     const [showModal, setShowModal] = useState(true);
-    const [category, setCategory] = useState(null)
-    const [subCategory, setSubCategory] = useState(null)
-    const [categoryError, setCategoryError] = useState(false)
-    const [subCategoryError, setSubCategoryError] = useState(false)
+    const userState = useSelector((state) => state.user)
+
     const [mode, setMode] = useState("advanced")
 
     const { height, width } = useWindowDimensions();
     const dispatch = useDispatch()
 
-    const initialRef = React.useRef(null);
-    const finalRef = React.useRef(null);
-
     const handleSubmit = (item) => {
         // if(!category) setCategoryError(true)
-        if(!subCategory) setCategoryError(true)
-
-        console.log(item)
-        console.log(category)
-        console.log(subCategory)
-        console.log(listSubCategory)
+        let a = { ...item, category: userState.category}
+       console.log(a)
     }
 
     let validationSchema = yup.object().shape({
@@ -62,35 +53,6 @@ export function Fab(){
             .typeError("Amount must be a number")
             .required('Amount is required'),
     });
-
-    let listCategory = [
-        {"key": 1, value: "Food"},
-        {"key": 2, value: "Groceries"},
-        {"key": 3, value: "Shopping"},
-    ]
-
-    let listSubCategory = [
-        {"key": 1, value: "Breakfastt"},
-        {"key": 2, value: "Lunchh"},
-        {"key": 3, value: "Dinnerr"},
-    ]
-
-    function subCategoryInput() {
-        if(mode === "advanced")
-        return(
-            <Select
-                title={"Sub Category"}
-                onValueChange={(itemValue) => setSubCategory(itemValue)}
-                placeholder={"Choose Sub Category"}
-            >
-                {listSubCategory}
-            </Select>
-        )
-    }
-
-
-
-
 
     return(
         <Box>
@@ -110,62 +72,25 @@ export function Fab(){
                     <View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, justifyContent: 'space-between' }}>
                        <Button
                            title={"Simple"}
-                           onPress={() => setMode("simple")}
+                           onPress={() => dispatch(expenseMode("simple"))}
                            style={{width: '45%'}}
                        />
                         <Button
                             title={"Advanced"}
-                            onPress={() => setMode("advanced")}
+                            onPress={() => dispatch(expenseMode("advanced"))}
                             style={{width: '45%'}}
                         />
                     </View>
 
                     <Modal.Body>
                         <Form
-                            initialValues={{name: '', amount: '' }}
+                            initialValues={{name: 'dd', amount: '' }}
                             onSubmit={handleSubmit}
                             validationSchema={validationSchema} >
 
                             <FormInput title="Name" name="name"/>
 
-                            <Select
-                                title={"Category"}
-                                onValueChange={(itemValue) => setCategory(itemValue)}
-                                placeholder={"Choose Category"}
-                            >
-                                {listCategory}
-                            </Select>
-
-                            {/*<Select*/}
-                            {/*    title={"Category"}*/}
-                            {/*    onValueChange={(itemValue) => setCategory(itemValue)}*/}
-                            {/*    placeholder={"Choose Category"}*/}
-                            {/*>*/}
-                            {/*    <Select.Item label="Food" value="Food" />*/}
-                            {/*    <Select.Item label="Groceries" value="Groceries" />*/}
-                            {/*    <Select.Item label="Toys" value="Toys" />*/}
-                            {/*</Select>*/}
-
-                            {/*<Menu style={{marginTop: 1, width: width*0.73, marginLeft: 5}} trigger={triggerProps => {*/}
-                            {/*    return(*/}
-                            {/*        <Pressable {...triggerProps}>*/}
-                            {/*            <View style={styles.container}>*/}
-                            {/*                <Text style={styles.text}>Category</Text>*/}
-                            {/*                <View style={styles.input}>*/}
-                            {/*                    <Text style={{fontSize: theme.FONT_SIZE_MEDIUM}}>{category || "Select Category"}</Text>*/}
-                            {/*                    <ChevronDownIcon />*/}
-                            {/*                </View>*/}
-                            {/*                <FormInputErrorMsg error={"please select category"} visible={categoryError}/>*/}
-                            {/*            </View>*/}
-
-                            {/*        </Pressable>*/}
-                            {/*    )*/}
-                            {/*}}>*/}
-                            {/*    <Menu.Item onPress={()=> setCategory("Food")}>Food</Menu.Item>*/}
-                            {/*    <Menu.Item onPress={()=>setCategory("ETC")}>ETC</Menu.Item>*/}
-                            {/*</Menu>*/}
-
-                            {subCategoryInput()}
+                            {Categories()}
 
                             <FormInput title="Amount" name="amount" />
 
@@ -178,6 +103,8 @@ export function Fab(){
 
                 </Modal.Content>
             </Modal>
+
+
 
 
 

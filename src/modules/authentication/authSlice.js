@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk, createAction} from '@reduxjs/toolkit'
 
 // import actions
 import {
-    loginTest,
     login,
     register,
     logout,
@@ -10,6 +9,7 @@ import {
 
 const initialState = {
     initialState_isLoading: true,
+    uuid: "",
     email: "awa@gmail.com",
     password: "123321",
     loginError: "abcdefg login error",
@@ -30,7 +30,9 @@ export const authSlice = createSlice({
         password: (state,action) => {state.password = validation_password(state,action)},
         loginError: (state,action) => {state.loginError = action.payload},
         loggedIn: (state,action) => {
-            state.loggedIn = action.payload,
+            console.log("loggedin" + action.payload)
+            state.uuid = action.payload.value,
+            state.loggedIn = action.payload.success,
             state.initialState_isLoading = false
         }
     },
@@ -111,7 +113,6 @@ export const {
     password,
     loginError,
     loggedIn,
-
 } = authSlice.actions
 
 export default authSlice.reducer

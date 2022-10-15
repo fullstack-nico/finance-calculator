@@ -4,11 +4,11 @@
 // const CONTROLLER_VERSION = '/Account_25_11_19_image';
 // const CONTROLLER_EXT = '/public/index.php/api';
 
-// const CONTROLLER_BASE = 'http://192.168.1.11';
+// const CONTROLLER_BASE = 'http://127.0.0.1:8000';
 // const CONTROLLER_TYPE = '/2020/Heroku';
 // const CONTROLLER_NAME = '/BakeryShop';
 // const CONTROLLER_VERSION = '';
-// const CONTROLLER_EXT = '/public/index.php/api';
+// const CONTROLLER_EXT = '/api';
 
 const CONTROLLER_BASE = 'https://financial-calculator-server-bgkfk.ondigitalocean.app'; //:8080
 const CONTROLLER_TYPE = '';
@@ -30,8 +30,10 @@ export const URL_LOGIN_GOOGLE = Url + '/login/google';
 
 
 // get account data
-// export const URL_GET_ACCOUNT_DATA_BASIC = Url + '/get/account/basic';
-// export const URL_UPDATE_ACCOUNT_DATA_BASIC = Url + '/update/account/basic';
+export const URL_GET_USER_DATA_BASIC = Url + '/get/user/basic';
+export const URL_UPDATE_USER_DATA_BASIC = Url + '/update/user/basic';
+export const URL_ADD_USER_EXPENSE_CATEGORY = Url + '/add/user/expense/category';
+export const URL_GET_USER_EXPENSE_CATEGORY = Url + '/get/user/expense/category';
 //
 // // get LIST
 // export const URL_GET_LIST_FLAT = Url + '/get/list/flat';

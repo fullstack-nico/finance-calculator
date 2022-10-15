@@ -10,6 +10,7 @@ import NavMain from '../navigation/NavMain';
 import {USER_TOKEN, USER_TOKEN_DESC} from '../_config/global/constants';
 import {loadData} from '../_config/global/functions';
 import {loggedIn as funcLoggedIn} from '../modules/authentication/authSlice';
+import {getUserData_all} from '../modules/user/userAction'
 
 export default function navigator(){
     const stateAuth = useSelector((state) => state.auth)
@@ -18,8 +19,11 @@ export default function navigator(){
 
     useEffect(()=>{
        loadData(USER_TOKEN, USER_TOKEN_DESC).then((result)=>{
-           if(result.success) dispatch(funcLoggedIn(result))
-           else dispatch(funcLoggedIn(null))
+           if(result.success) {
+               dispatch(funcLoggedIn(result));
+               dispatch(getUserData_all())
+           }
+           else dispatch(funcLoggedIn({success: false, value: null}))
        })
     }, [stateAuth.initialState_isLoading]);
 

@@ -9,11 +9,12 @@ export function Select({title, placeholder=null, onValueChange, children}){
             <Text style={themeComponent.text}>{title}</Text>
             <Selectt
                 onValueChange={onValueChange}
+
                 borderRadius={0} backgroundColor={theme.PRIMARY_COLOR_WHITE} borderColor={"black"}
                 // accessibilityLabel="Choose Service"
                 placeholder={placeholder}>
                 { children.map((item)=>{
-                    return <Selectt.Item key={item.key} label={item.value} value={item.value} />
+                    return <Selectt.Item key={item.key} label={item.label} value={item.value} />
                 })}
             </Selectt>
         </Box>
