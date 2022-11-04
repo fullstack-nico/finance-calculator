@@ -3,7 +3,7 @@ import {
     KEY_MASTER_APP,
     URL_GET_USER_DATA_BASIC,
     URL_ADD_USER_EXPENSE_CATEGORY,
-    URL_GET_USER_EXPENSE_CATEGORY, ADD_SUB_CATEGORY, ADD_CATEGORY,
+    URL_GET_USER_EXPENSE_CATEGORY, ADD_SUB_CATEGORY, ADD_CATEGORY, MODE_SUBCATEGORY,
 } from '../../_config/global/constants';
 import {saveData, removeDataAll,  serverPost} from '../../_config/global/functions';
 
@@ -41,6 +41,9 @@ export const get_expense_category = createAsyncThunk(
     'user/getExpenseCategory',  async(payload, { rejectWithValue, getState}) => {
 
         const { uuid } = getState().auth;
+        const { subCategoryList, categoryList} = getState().user;
+
+
 
         const URL = URL_GET_USER_EXPENSE_CATEGORY;
 
@@ -51,21 +54,39 @@ export const get_expense_category = createAsyncThunk(
             subcategoryValue: payload.subcategoryValue,
         };
 
+        console.log("---> req")
+        console.log(req)
+
         //	What to do with the received data
         const processDataFromServer = (response) => {
+
+            console.log("get_expense_category rsponse data")
+            console.log(response)
+
 
             if (response.status.status === 'success') {
                 let responseData  = response.data.data;
 
-                if(payload.categoryType === "subcategory") {
-
-                    if(!payload.editing) responseData.push({"key": 2, label: "add sub category", value: ADD_SUB_CATEGORY})
-                    return {category: "", subCategory: responseData}
+                if(payload.categoryType === MODE_SUBCATEGORY) {
+                    if(!payload.editing) {
+                        if(responseData === "empty"){
+                            console.log("1")
+                            return {categoryList, subCategoryList: [{"key": 1, label: "add sub category", value: ADD_SUB_CATEGORY}]}
+                        }
+                        console.log("2")
+                        responseData.push({"key": 1, label: "add sub category", value: ADD_SUB_CATEGORY})
+                        return {categoryList, subCategoryList: responseData}
+                    }
+                    console.log("4")
+                    return { categoryList, subCategoryList: [{"key": 1, label: "add sub category", value: ADD_SUB_CATEGORY}]}
                 }
 
-                if(!payload.editing) responseData.push({"key": 1, label: "add category", value: ADD_CATEGORY})
+                if(!payload.editing) {
+                    responseData.push({"key": 1, label: "add category", value: ADD_CATEGORY})
+                    return {categoryList: responseData, subCategoryList: subCategoryList}
+                }
+                return {categoryList: responseData, subCategoryList: subCategoryList}
 
-                return {category: responseData, subCategory: ""}
             }
             return rejectWithValue(JSON.stringify(response))
         };
@@ -109,4 +130,4 @@ export const add_expense_category = createAsyncThunk(
         };
 
         return await serverPost(URL, req, processDataFromServer, errorFunction, rejectWithValue);
-});
+    });

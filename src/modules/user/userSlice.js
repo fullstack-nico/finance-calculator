@@ -6,7 +6,7 @@ import {
     get_expense_category,
     add_expense_category
 } from './userAction';
-import {ADD_CATEGORY, ADD_SUB_CATEGORY} from '../../_config/global/constants';
+import {ADD_CATEGORY, ADD_SUB_CATEGORY, MODE_CATEGORY} from '../../_config/global/constants';
 
 
 const initialState = {
@@ -27,12 +27,15 @@ const initialState = {
     inputName: null,
     placeholder:  null,
     showModalSubCategory: false,
+    mode: MODE_CATEGORY,
 
     expenseMode: 'simple',
 
     // getting category from server
     categoryList_isLoading: false,
     categoryList: [{"key": 0, label: "add category", value: ADD_CATEGORY}],
+    subCategoryList_empty: [{"key": 0, label: "add sub category", value: ADD_SUB_CATEGORY}],
+    subCategoryList: [{"key": 0, label: "add sub category", value: ADD_SUB_CATEGORY}],
     cat: "nyanners"
 }
 
@@ -62,7 +65,8 @@ export const authSlice = createSlice({
             state.handleSubmitModal = action.payload.handleSubmitModal,
             state.inputTitle = action.payload.inputTitle,
             state.inputName = action.payload.inputName,
-            state.placeholder = action.payload.placeholder
+            state.placeholder = action.payload.placeholder,
+            state.mode= action.payload.mode
 
         },
         expenseMode: (state, action) => {state.expenseMode = action.payload}
@@ -91,10 +95,10 @@ export const authSlice = createSlice({
 
             })
             .addCase(get_expense_category.fulfilled, (state, action) => {
-                console.log("Category", action.payload.category)
+                console.log("Category", action.payload)
                 state.categoryList_isLoading = false
-                state.categoryList = action.payload.category
-                state.subCategory = action.payload.subCategory
+                state.categoryList = action.payload.categoryList
+                state.subCategoryList = action.payload.subCategoryList
             })
             .addCase(get_expense_category.rejected, (state, action) => {
                 // wont run if builder is fulfilled
