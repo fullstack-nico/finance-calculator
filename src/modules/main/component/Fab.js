@@ -27,28 +27,25 @@ import {useDispatch, useSelector} from 'react-redux';
 import {logout} from '../../authentication/authAction';
 import {Categories} from './Categories';
 import {expenseMode} from '../../user/userSlice';
+import {add_expense} from '../../user/userAction';
 
 
 export function Fab(){
     // const [fab, setFab] = useState(false);
     const [actionSheet, setActionSheet] = useState(false)
-    const [showModal, setShowModal] = useState(true);
+    const [showModal, setShowModal] = useState(false);
     const userState = useSelector((state) => state.user)
-
-    const [mode, setMode] = useState("advanced")
 
     const { height, width } = useWindowDimensions();
     const dispatch = useDispatch()
 
     const handleSubmit = (item) => {
-        // if(!category) setCategoryError(true)
-        let a = { ...item, category: userState.category}
-       console.log(a)
+        dispatch(add_expense({expenseName: item.name, expensePrice: item.amount}))
     }
 
     let validationSchema = yup.object().shape({
-        name: yup.string()
-            .required('Name is required'),
+        // name: yup.string()
+        //     .required('Name is required'),
         amount: yup.number()
             .typeError("Amount must be a number")
             .required('Amount is required'),
@@ -62,37 +59,57 @@ export function Fab(){
                 onPress = {() =>setActionSheet(!actionSheet)}>
             </FabNativeBase>
 
-
-
             <Modal isOpen={showModal} onClose={() => setShowModal(false)} closeOnOverlayClick={false}>
                 <Modal.Content style={{ width: width*0.85, }}>
                     <Modal.CloseButton />
                     <Text style={{ alignSelf: 'center', marginTop: 15, marginBottom: 10}}>New Expenses</Text>
 
                     <View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, justifyContent: 'space-between' }}>
-                       <Button
-                           title={"Simple"}
-                           onPress={() => dispatch(expenseMode("simple"))}
-                           style={{width: '45%'}}
-                       />
-                        <Button
-                            title={"Advanced"}
-                            onPress={() => dispatch(expenseMode("advanced"))}
-                            style={{width: '45%'}}
-                        />
+                        {
+                            userState.expenseMode === "simple" ?
+                            <Button
+                                selected
+                                title={"Simple"}
+                                onPress={() => dispatch(expenseMode("simple"))}
+                                style={{width: '45%'}}
+                            />
+                            :
+                            <Button
+                                unselected
+                                title={"Simple"}
+                                onPress={() => dispatch(expenseMode("simple"))}
+                                style={{width: '45%'}}
+                            />
+                        }
+                        {
+                            userState.expenseMode === "advanced" ?
+                                <Button
+                                    selected
+                                    title={"Advanced"}
+                                    onPress={() => dispatch(expenseMode("advanced"))}
+                                    style={{width: '45%'}}
+                                />
+                                :
+                                <Button
+                                    unselected
+                                    title={"Advanced"}
+                                    onPress={() => dispatch(expenseMode("advanced"))}
+                                    style={{width: '45%'}}
+                                />
+                        }
                     </View>
 
                     <Modal.Body>
                         <Form
-                            initialValues={{name: 'dd', amount: '' }}
+                            initialValues={{name: '', amount: '' }}
                             onSubmit={handleSubmit}
                             validationSchema={validationSchema} >
 
-                            <FormInput title="Name" name="name"/>
+                            <FormInput title="Name" name="name" placeholder="Name of expense"/>
 
                             {Categories()}
 
-                            <FormInput title="Amount" name="amount" />
+                            <FormInput title="Amount (RM)" name="amount" placeholder="example: 10.00"/>
 
                             <FormButton
                                 rounded={true}

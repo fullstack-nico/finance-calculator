@@ -7,21 +7,19 @@ import {Button, Select} from '../../../component/form';
 import {Pressable, useWindowDimensions, View} from 'react-native';
 import {loadData, theme} from '../../../_config/global';
 import {useDispatch, useSelector} from 'react-redux';
-import {category, subCategory, setCategoriesModal} from '../../user/userSlice';
-import {get_expense_category, add_expense_category, getUserData_all} from '../../user/userAction';
-import {loggedIn as funcLoggedIn} from '../../authentication/authSlice';
-import * as yup from 'yup';
+import {category, subCategory, setCategoriesModal, setCategoriesModal_isOpen} from '../../user/userSlice';
+import {
+    get_expense_category,
+    add_expense_category,
+    update_expense_category,
+    expense_category_key,
+} from '../../user/userAction';
 
 
 export function Categories(){
 
-    const [modalCategory, setModalCategory] = useState(false);
-    const [modalSubCategory, setModalSubCategory] = useState(false)
-
-
     const [mode, setMode] = useState("add")
-    const [editing, setEditing] = useState(false);
-    const [loading,  setLoading] = useState(false)
+
     const [ loading_edit_categoryList, setLoading_edit_categoryList] = useState(false);
     const [editItemSelected,  setEditItemSelected] = useState(false)
 
@@ -33,12 +31,13 @@ export function Categories(){
 
     useEffect(()=>{
         if(loading_edit_categoryList) {
-            console.log("--->", userState.mode)
+            console.log("loading_edit_categoryList 1")
             dispatch(get_expense_category({categoryType: userState.mode, editing: true, subcategoryValue: userState.category}))
             setLoading_edit_categoryList(false);
         }
         if(userState.isOpen === false) {
-            dispatch(get_expense_category({categoryType: userState.mode, editing: false}))
+            console.log("loading_edit_categoryList 2")
+            dispatch(get_expense_category({categoryType: userState.mode, editing: false, subcategoryValue: userState.category}))
         }
         // if(userState.expenseMode === "advanced" ){
         //     dispatch(get_expense_category({categoryType: 'subcategory', editing: false, subcategoryValue: userState.category}))
@@ -46,15 +45,12 @@ export function Categories(){
 
     }, [loading_edit_categoryList, userState.isOpen]);
 
-    // useEffect(()=>{
-    //     dispatch(get_expense_category({categoryType: 'category', editing: false}))
-    // }, [])
-
     function categoryInput(){
         return(
             <Select
                 title={"Category"}
                 onValueChange={(itemValue) => {
+
                     if(itemValue === ADD_CATEGORY) {
                         dispatch(setCategoriesModal({
                             isOpen: true,
@@ -70,6 +66,7 @@ export function Categories(){
                     }
                     else {
                         dispatch(category(itemValue));
+                        dispatch(expense_category_key({mode: MODE_CATEGORY, value: itemValue}));
                         if(userState.expenseMode === "advanced") {
                             dispatch(get_expense_category({categoryType: MODE_SUBCATEGORY, editing: false, subcategoryValue: itemValue}))
                         }
@@ -102,7 +99,10 @@ export function Categories(){
                                 mode: MODE_SUBCATEGORY,
                             }))
                         }
-                        else dispatch(subCategory(itemValue))
+                        else {
+                            dispatch(expense_category_key({mode: MODE_SUBCATEGORY, value: itemValue}));
+                            dispatch(subCategory(itemValue));
+                        }
                     }}
                     placeholder={"Choose Sub Category"}
                 >
@@ -114,7 +114,7 @@ export function Categories(){
     function modalAddEdit(){
         return(
             <Modal isOpen={userState.isOpen} onClose={()=> {
-                        dispatch(setCategoriesModal({isOpen: false}));
+                        dispatch(setCategoriesModal_isOpen({isOpen: false}));
                     }}
                    closeOnOverlayClick={false}>
                 <Modal.Content style={{ width: width*0.85, }}>
@@ -124,24 +124,53 @@ export function Categories(){
 
                     <View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, justifyContent: 'space-between' }}>
 
-                        <Button
-                            title={"Add"}
-                            onPress={() => {
-                                // setLoading(true)
-                                setMode('add');
-                            }}
-                            style={{width: '45%'}}
-                        />
-                        <Button
-                            title={"Edit"}
-                            onPress={() => {
-                                setLoading_edit_categoryList(true)
-                                setMode('edit');
-                                setEditing(true);
-                                setEditItemSelected(false) // can choose item to edit in the selector again
-                            }}
-                            style={{width: '45%'}}
-                        />
+                        {
+                            mode === "add" ?
+                                <Button
+                                    selected={true}
+                                    title={"Add"}
+                                    onPress={() => {
+                                        // setLoading(true)
+                                        setMode('add');
+                                    }}
+                                    style={{width: '45%'}}
+                                />
+                                :
+                                <Button
+                                    unselected={true}
+                                    title={"Add"}
+                                    onPress={() => {
+                                        // setLoading(true)
+                                        setMode('add');
+                                    }}
+                                    style={{width: '45%'}}
+                                />
+                        }
+                        {
+                            mode === "edit" ?
+                                <Button
+                                    selected={true}
+                                    title={"Edit"}
+                                    onPress={() => {
+                                        setLoading_edit_categoryList(true)
+                                        setMode('edit');
+                                        setEditItemSelected(false) // can choose item to edit in the selector again
+                                    }}
+                                    style={{width: '45%'}}
+                                />
+                                :
+                                <Button
+                                    unselected={true}
+                                    title={"Edit"}
+                                    onPress={() => {
+                                        setLoading_edit_categoryList(true)
+                                        setMode('edit');
+                                        setEditItemSelected(false) // can choose item to edit in the selector again
+                                    }}
+                                    style={{width: '45%'}}
+                                />
+                        }
+
                     </View>
 
                     <Modal.Body>
@@ -156,7 +185,7 @@ export function Categories(){
 
 
     function modalIsEditing(){
-        if(loading) return <></>
+        // if(loading) return <></>
 
         let initialValues = {};
         if(mode === "edit") {
@@ -168,9 +197,15 @@ export function Categories(){
                 return(
                     <Form
                         initialValues={initialValues}
-                        onSubmit={(item)=>
-                        console.log(item)
-                        }
+                        onSubmit={({item})=> {
+                            console.log("MODE_CATEGORY", MODE_CATEGORY)
+                            dispatch(update_expense_category({
+                                categoryType: userState.mode,
+                                categoryKey_label: userState.category,
+                                subCategoryKey_label: userState.subCategory,
+                                value: item,
+                            }))
+                        }}
                     >
 
                         <FormInput
@@ -189,7 +224,12 @@ export function Categories(){
                 <Select
                     title={"Select "+ userState.title + " to edit"}
                     onValueChange={(itemValue) => {
-                        dispatch(category(itemValue));
+                        console.log("edit category =" + itemValue)
+                        if(userState.mode === MODE_CATEGORY) dispatch(category(itemValue));
+                        else {
+                            if(itemValue === ADD_SUB_CATEGORY) setMode('add');
+                            else dispatch(subCategory(itemValue));
+                        }
                         setEditItemSelected(true)
                     }}
                     placeholder={"Choose " + userState.title}
@@ -206,8 +246,7 @@ export function Categories(){
             <Form
                 initialValues={initialValues}
                 onSubmit={(item)=>{
-                    if(userState.mode === MODE_CATEGORY) dispatch(add_expense_category(item))
-                    // add dispatch expense subcategory here
+                    dispatch(add_expense_category({item: item.item, mode: userState.mode, categoryName: userState.category}))
                 }}
             >
 
@@ -224,32 +263,9 @@ export function Categories(){
     }
 
 
-
-
-    // function modalAddSimple({initialValues={}, handleSubmitModal, inputTitle, inputName}){
-    //     return(
-    //
-    //         <Form
-    //             initialValues={initialValues}
-    //             onSubmit={handleSubmitModal}
-    //         >
-    //
-    //             <FormInput title={inputTitle} name={"item"}/>
-    //
-    //             <FormButton
-    //                 rounded={true}
-    //                 title={"Confirm"}
-    //             />
-    //         </Form>
-    //
-    //     )
-    // }
-
-
     return(
         <>
             {modalAddEdit()}
-            {/*{modalForCategorySubCategory()}*/}
             {categoryInput()}
             {subCategoryInput()}
         </>

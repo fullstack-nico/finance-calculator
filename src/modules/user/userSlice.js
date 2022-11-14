@@ -3,8 +3,15 @@ import { createSlice, createAsyncThunk, createAction} from '@reduxjs/toolkit'
 // import actions
 import {
     getUserData_all,
+
+    // expense category
     get_expense_category,
-    add_expense_category
+    add_expense_category,
+    update_expense_category,
+    expense_category_key,
+
+    // expense
+    add_expense,
 } from './userAction';
 import {ADD_CATEGORY, ADD_SUB_CATEGORY, MODE_CATEGORY} from '../../_config/global/constants';
 
@@ -13,7 +20,9 @@ const initialState = {
     userData: null,
 
     category: null,
+    categoryKey: null,
     subCategory: null,
+    subCategoryKey: null,
     categoryError: null,
     subCategoryError: null,
 
@@ -56,6 +65,7 @@ export const authSlice = createSlice({
         subCategory: (state, action) => {state.subCategory = action.payload},
         categoryError: (state, action) => {state.categoryError = action.payload},
         subCategoryError: (state, action) => {state.subCategoryError = action.payload},
+        setCategoriesModal_isOpen: (state, action)=>{ state.isOpen = action.payload.isOpen },
         setCategoriesModal: (state, action)=>{
             console.log("uwu", action.payload)
             state.isOpen = action.payload.isOpen,
@@ -88,7 +98,22 @@ export const authSlice = createSlice({
             })
             // EXPENSES
 
-            // get category
+            // add expenses
+            // update category and subcategory key
+            .addCase(add_expense.pending, (state, action) => {
+            })
+            .addCase(add_expense.fulfilled, (state, action) => {
+                alert("Added new expense successfully")
+            })
+            .addCase(add_expense.rejected, (state, action) => {
+                // wont run if builder is fulfilled
+                console.log("builder add_expense REJECTED : ", action.payload)
+                alert(action.payload)
+            })
+
+            // EXPENSE CATEGORY
+
+            // add category
             .addCase(get_expense_category.pending, (state, action) => {
                 console.log("builder get_expense_category pending", action.payload)
                 state.categoryList_isLoading = true
@@ -109,7 +134,6 @@ export const authSlice = createSlice({
 
             // add category
             .addCase(add_expense_category.pending, (state, action) => {
-                console.log("builder add_expense_category pending", action.payload)
             })
             .addCase(add_expense_category.fulfilled, (state, action) => {
                 alert("New Category added successfully")
@@ -120,6 +144,32 @@ export const authSlice = createSlice({
             .addCase(add_expense_category.rejected, (state, action) => {
                 // wont run if builder is fulfilled
                 console.log("builder add_expense_category REJECTED : ", action.payload)
+                alert(action.payload)
+            })
+
+             //update category
+            .addCase(update_expense_category.pending, (state, action) => {
+            })
+            .addCase(update_expense_category.fulfilled, (state, action) => {
+                alert("updated succesfully")
+                // state.userData = action.payload
+            })
+            .addCase(update_expense_category.rejected, (state, action) => {
+                // wont run if builder is fulfilled
+                console.log("builder update_expense_category REJECTED : ", action.payload)
+                alert(action.payload)
+            })
+
+            // update category and subcategory key
+            .addCase(expense_category_key.pending, (state, action) => {
+            })
+            .addCase(expense_category_key.fulfilled, (state, action) => {
+                state.categoryKey = action.payload.categoryKey
+                state.subCategoryKey =  action.payload.subCategoryKey
+            })
+            .addCase(expense_category_key.rejected, (state, action) => {
+                // wont run if builder is fulfilled
+                console.log("builder expense_category_key REJECTED : ", action.payload)
                 alert(action.payload)
             })
     },
@@ -134,6 +184,7 @@ export const {
     categoryError,
     subCategoryError,
     setCategoriesModal,
+    setCategoriesModal_isOpen,
     expenseMode
 } = authSlice.actions
 

@@ -16,8 +16,10 @@ export function FormInput({name,width,...otherProps}) {
                     setFieldValue(name, text);
                 }}
                 // values={values[name]}
+
                 value={values[name]}
                 width={width}
+
                 {...otherProps}
             >
                 <FormInputErrorMsg error={errors[name]} visible={touched[name]}/>

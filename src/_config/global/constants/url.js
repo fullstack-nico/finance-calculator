@@ -34,12 +34,12 @@ export const URL_GET_USER_DATA_BASIC = Url + '/get/user/basic';
 export const URL_UPDATE_USER_DATA_BASIC = Url + '/update/user/basic';
 export const URL_ADD_USER_EXPENSE_CATEGORY = Url + '/add/user/expense/category';
 export const URL_GET_USER_EXPENSE_CATEGORY = Url + '/get/user/expense/category';
-//
-// // get LIST
-// export const URL_GET_LIST_FLAT = Url + '/get/list/flat';
-// export const URL_GET_LIST_CAKE = Url + '/get/list/cake';
-// export const URL_GET_LIST_TO_RECEIVE = Url + '/get/list/toReceive';
-//
+export const URL_UPDATE_USER_EXPENSE_CATEGORY = Url + '/update/user/expense/category';
+
+// get expense data
+export const URL_ADD_EXPENSE = Url + '/add/expense';
+
+
 // // PURCHASE
 // export const URL_PURCHASE = Url + '/purchase/inventory';
 // export const URL_PAY = 'https://test2pay.ghl.com/IPGSG/Payment.aspx';
